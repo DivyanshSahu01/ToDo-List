@@ -1,39 +1,57 @@
-const list=document.querySelector('.list');
-const addbtn=document.querySelector('.add');
-const clearbtn=document.querySelector('.clear');
-const input=document.querySelector('input');
-var todos=[];
+const form = document.getElementById('form')
+const input = document.getElementById('input')
+const todosUL = document.getElementById('todos')
+var todos = JSON.parse(localStorage.getItem('todos'))
 
-clearbtn.addEventListener('click',clear);
-
-function clear(){
-    todos=[];
-    localStorage.setItem('list',JSON.stringify(todos));
-    window.location='http://127.0.0.1:5500/index.html';
+if (todos) {
+    todos.forEach(todo => {
+        addToDo(todo)
+    })
 }
 
-if(JSON.parse(localStorage.getItem('list')) != null){
-    todos=JSON.parse(localStorage.getItem('list'));
-    for(i=0;i<JSON.parse(localStorage.getItem('list')).length;i++){
-        list.innerHTML += '<div class="list__item">' +JSON.parse(localStorage.getItem('list'))[i]+ '</div>'
+form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    addToDo()
+})
+
+function addToDo(todo) {
+    let todoText = input.value
+    if (todo) {
+        todoText = todo.text
+    }
+    if (todoText) {
+        const todoEl = document.createElement('li')
+        todoEl.innerText = todoText
+
+        if (todo && todo.completed) {
+            todoEl.classList.add('completed')
+        }
+
+        todoEl.addEventListener('click', () => {
+            todoEl.classList.toggle('completed')
+            updateLS()
+        })
+
+        todoEl.addEventListener('contextmenu', (e) => {
+            e.preventDefault()
+            todoEl.remove()
+            updateLS()
+        })
+        todosUL.appendChild(todoEl)
+        updateLS()
+        input.value = ''
     }
 }
 
-const list__items=document.querySelectorAll('.list__item');
-
-for(i=0;i<list__items.length;i++){
-    list__items[i].addEventListener('click',function(e){
-        e.target.classList.toggle('completed');
-    });
-}
-
-addbtn.addEventListener('click',addToDo);
-
-function addToDo(){
-    if(input.value == ''){
-        return;
-    }
-    list.innerHTML += '<div class="list__item">'+input.value+'</div>'
-    todos.push(input.value);
-    localStorage.setItem('list',JSON.stringify(todos));
+function updateLS() {
+    var todosEL = document.querySelectorAll('li')
+    todos = []
+    todosEL.forEach(todoEl => {
+        todos.push({
+            text: todoEl.innerText,
+            completed: todoEl.classList.contains('completed')
+        })
+    })
+    console.log("todos")
+    localStorage.setItem('todos', JSON.stringify(todos))
 }

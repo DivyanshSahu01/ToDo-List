@@ -8,12 +8,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="list">
-        
-    </div>
-    <input type="text" placeholder="Enter ToDo">
-    <button class="add">Add</button>
-    <button class="clear">Clear</button>
+    <h1>todos</h1>
+    <form id="form">
+        <input type="text" class="input" id="input" placeholder="Enter ToDo" autocomplete="off">
+        <ul class="todos" id="todos">
+            
+        </ul>
+    </form>
+    <small>
+        Left click to toggle completed.
+        <br>
+        Right click to delete todo.
+    </small>
 </body>
 <script src="script.js"></script>
 </html>
